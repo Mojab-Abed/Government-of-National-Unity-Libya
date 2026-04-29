@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مبادرة اضاحي الخير حكومة الوحدة الوطنية
+</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --bg-input: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --accent-green: #22c55e;
+            --accent-amber: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-purple: #8b5cf6;
+            --border: #334155;
+            --shadow: 0 4px 24px rgba(0,0,0,0.3);
+            --radius: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 50%, #1a0a2e 100%);
+            padding: 40px 20px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 50%, rgba(59,130,246,0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 50%, rgba(139,92,246,0.08) 0%, transparent 50%);
+            animation: heroFloat 20s ease-in-out infinite;
+        }
+
+        @keyframes heroFloat {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-2%, 2%) rotate(1deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+        }
+
+        .loading-overlay {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 20px;
+            gap: 20px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px 20px 60px;
+        }
+
+        /* Stats Cards */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 22px 20px;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+
+        .stat-card:nth-child(1)::after { background: var(--accent); }
+        .stat-card:nth-child(2)::after { background: var(--accent-green); }
+        .stat-card:nth-child(3)::after { background: var(--accent-amber); }
+        .stat-card:nth-child(4)::after { background: var(--accent-purple); }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .stat-number {
+            font-size: 2.4rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .stat-card:nth-child(1) .stat-number { color: var(--accent); }
+        .stat-card:nth-child(2) .stat-number { color: var(--accent-green); }
+        .stat-card:nth-child(3) .stat-number { color: var(--accent-amber); }
+        .stat-card:nth-child(4) .stat-number { color: var(--accent-purple); }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        /* Search & Filters */
+        .controls {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 28px;
+        }
+
+        .controls-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 18px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 12px 18px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            direction: rtl;
+        }
+
+        .search-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: none;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background: var(--bg-input);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            color: var(--text-primary);
+            border-color: var(--text-secondary);
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .filter-select, .filter-date {
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-family: 'Tajawal', sans-serif;
+            font-size: 0.9rem;
+            min-width: 160px;
+            cursor: pointer;
+        }
+
+        .filter-select:focus, .filter-date:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .filter-date::-webkit-calendar-picker-indicator {
+            filter: invert(0.7);
+            cursor: pointer;
+        }
+
+        .results-count {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+        }
+
+        .results-count span {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        /* Charts */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        .chart-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 22px;
+        }
+
+        .chart-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-height: 350px;
+        }
+
+        /* Data Table */
+        .table-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 700px;
+        }
+
+        thead th {
+            background: rgba(59,130,246,0.08);
+            padding: 14px 16px;
+            text-align: right;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: background 0.15s;
+        }
+
+        tbody tr:hover {
+            background: rgba(59,130,246,0.05);
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        tbody td {
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-family {
+            background: rgba(139,92,246,0.15);
+            color: #a78bfa;
+        }
+
+        .badge-city {
+            background: rgba(34,197,94,0.15);
+            color: #4ade80;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .no-data-icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 1.6rem; }
+            .charts-grid { grid-template-columns: 1fr; }
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .controls { padding: 16px; }
+            .search-input { min-width: 100%; }
+            .filter-select, .filter-date { min-width: 140px; }
+        }
+
+        @media (max-width: 480px) {
+            .stats-row { grid-template-columns: 1fr; }
+        }
+
+        .error-msg {
+            background: rgba(239,68,68,0.1);
+            border: 1px solid rgba(239,68,68,0.3);
+            color: #fca5a5;
+            padding: 20px;
+            border-radius: var(--radius);
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .error-msg button {
+            margin-top: 10px;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .page-btn {
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--bg-input);
+            color: var(--text-secondary);
+            font-family: 'Tajawal', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .page-btn:hover:not(:disabled) {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .page-btn.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+
+        .page-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .age-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 8px;
+            background: rgba(245,158,11,0.12);
+            color: #fbbf24;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+
+        .phone-text {
+            direction: ltr;
+            display: inline-block;
+            unicode-bidi: isolate;
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="hero-content">
+            <h1>مبادرة اضاحي الخير حكومة الوحدة الوطنية
+</h1>
+            <p>لوحة التحكم</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="loading" class="loading-overlay">
+            <div class="spinner"></div>
+            <div class="loading-text">جاري تحميل البيانات...</div>
+        </div>
+
+        <div id="errorContainer" style="display:none;"></div>
+
+        <div id="appContent" style="display:none;">
+            <!-- Stats -->
+            <div class="stats-row" id="statsRow"></div>
+
+            <!-- Controls -->
+            <div class="controls">
+                <div class="controls-title">🔍 البحث والتصفية</div>
+                <div class="search-row">
+                    <input type="text" id="searchInput" class="search-input" placeholder="ابحث بالاسم، رقم الهاتف، أو الرقم الشخصي...">
+                    <button class="btn btn-primary" onclick="applyFilters()">بحث</button>
+                    <button class="btn btn-secondary" onclick="resetFilters()">إعادة تعيين</button>
+                </div>
+                <div class="filter-row">
+                    <span class="filter-label">🏙️ المدينة:</span>
+                    <select id="cityFilter" class="filter-select" onchange="applyFilters()">
+                        <option value="">جميع المدن</option>
+                    </select>
+                    <span class="filter-label">📅 تاريخ الميلاد من:</span>
+                    <input type="date" id="dateFrom" class="filter-date" onchange="applyFilters()">
+                    <span class="filter-label">إلى:</span>
+                    <input type="date" id="dateTo" class="filter-date" onchange="applyFilters()">
+                </div>
+                <div class="results-count" id="resultsCount"></div>
+            </div>
+
+            <!-- Charts -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <div class="chart-title">📍 التوزيع حسب المدينة</div>
+                    <div class="chart-container">
+                        <canvas id="cityChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">👥 عدد أفراد الأسرة</div>
+                    <div class="chart-container">
+                        <canvas id="familyChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">🎂 التوزيع العمري</div>
+                    <div class="chart-container">
+                        <canvas id="ageChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">🏠القائم علي اعالة الاسرة</div>
+                    <div class="chart-container">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="table-section">
+                <div class="table-header">
+                    <div class="table-title">📋 بيانات المسجلين</div>
+                    <button class="btn btn-secondary" onclick="exportCSV()">📥 تصدير CSV</button>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>الاسم</th>
+                                <th>رقم الهاتف</th>
+                                <th>الرقم الشخصي</th>
+                                <th>المدينة</th>
+                                <th>أفراد الأسرة</th>
+                                <th>القائم علي اعالة الاسرة</th>
+                                <th>تاريخ الميلاد</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+                </div>
+                <div class="pagination" id="pagination"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const DATA_URL = 'https://script.googleusercontent.com/macros/echo?user_content_key=AUkAhnROitTFXp6CyP2kfEgAbpqQLuJitQHGqBCfp763xFvycfm-jcx9m7kMyfO_sU0Ut3W_1-Evr_Dfm-Rv_s97UPPSoXglSy8ho3u7a2IR9dpxc2lmjryW6aA4G7GbTq4HkUDWBbm5JPtyRtg70_xo-Lfy0lHcj1Nl2hEUmh1m2gOTohlYS_9BbHk-SHIF8W1-9b63om4YzsquvBuG1_EYow9Z3bZMZX_eF3r7fEF5Ztd-lUTcQiVbulER_MmxZQ2chvktD60tfE84XbSFoJzqb4IaTAfktQ&lib=M2KMiLb9YaYDK6xFDCS4O4TxVJJP_QJQF';
+
+        let allData = [];
+        let filteredData = [];
+        let currentPage = 1;
+        const PAGE_SIZE = 15;
+
+        let cityChartInstance = null;
+        let familyChartInstance = null;
+        let ageChartInstance = null;
+        let statusChartInstance = null;
+
+        const CHART_COLORS = [
+            'rgba(59,130,246,0.8)',
+            'rgba(34,197,94,0.8)',
+            'rgba(245,158,11,0.8)',
+            'rgba(239,68,68,0.8)',
+            'rgba(139,92,246,0.8)',
+            'rgba(236,72,153,0.8)',
+            'rgba(6,182,212,0.8)',
+            'rgba(168,85,247,0.8)',
+            'rgba(251,146,60,0.8)',
+            'rgba(132,204,22,0.8)',
+            'rgba(99,102,241,0.8)',
+            'rgba(244,63,94,0.8)',
+            'rgba(14,165,233,0.8)',
+            'rgba(22,163,74,0.8)',
+            'rgba(195,120,15,0.8)'
+        ];
+
+        function normalizeArabic(text) {
+            if (!text) return '';
+            return text.replace(/[\u064B-\u065F\u0670]/g, '').replace(/\u200F/g, '').replace(/\u200E/g, '').trim();
+        }
+
+        async function fetchData() {
+            try {
+                const response = await fetch(DATA_URL);
+                if (!response.ok) throw new Error('فشل في جلب البيانات');
+                let rawData = await response.json();
+
+                // Handle if data is wrapped in an object
+                if (rawData.data && Array.isArray(rawData.data)) {
+                    allData = rawData.data;
+                } else if (Array.isArray(rawData)) {
+                    allData = rawData;
+                } else {
+                    // Try to find array in object
+                    const keys = Object.keys(rawData);
+                    for (let k of keys) {
+                        if (Array.isArray(rawData[k])) {
+                            allData = rawData[k];
+                            break;
+                        }
+                    }
+                }
+
+                if (!allData.length) throw new Error('لا توجد بيانات');
+
+                // Clean and normalize data
+                allData = allData.map((item, index) => ({
+                    name: normalizeArabic(item.name || ''),
+                    phone: (item.phone || '').toString().replace(/\u200F|\u200E/g, '').trim(),
+                    id: (item.id || '').toString().replace(/\u200F|\u200E|\u200D|\u202D|\u202C/g, '').trim(),
+                    city: normalizeArabic(item.city || 'غير محدد'),
+                    family_members: parseInt(item.family_members) || 0,
+                    responisble_family: normalizeArabic(item.responisble_family || item.responsible_family || 'غير محدد'),
+                    age: (item.age || item.birth_date || '').toString().replace(/\u200F|\u200E/g, '').trim(),
+                    index: index
+                }));
+
+                populateCityFilter();
+                applyFilters();
+
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('appContent').style.display = 'block';
+            } catch (err) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('errorContainer').style.display = 'block';
+                document.getElementById('errorContainer').innerHTML = `
+                    <div class="error-msg">
+                        <p style="font-size:1.1rem;font-weight:600;">❌ خطأ في تحميل البيانات</p>
+                        <p style="margin-top:8px;font-size:0.9rem;">${err.message}</p>
+                        <button class="btn btn-primary" onclick="location.reload()" style="margin-top:14px;">إعادة المحاولة</button>
+                    </div>
+                `;
+            }
+        }
+
+        function populateCityFilter() {
+            const cities = [...new Set(allData.map(d => d.city))].sort();
+            const sel = document.getElementById('cityFilter');
+            cities.forEach(city => {
+                const opt = document.createElement('option');
+                opt.value = city;
+                opt.textContent = city;
+                sel.appendChild(opt);
+            });
+        }
+
+        function calculateAge(birthDateStr) {
+            if (!birthDateStr) return null;
+            const parts = birthDateStr.split('-');
+            if (parts.length !== 3) return null;
+            const year = parseInt(parts[0]);
+            const month = parseInt(parts[1]) - 1;
+            const day = parseInt(parts[2]);
+            if (isNaN(year) || isNaN(month) || isNaN(day)) return null;
+            const today = new Date();
+            const birth = new Date(year, month, day);
+            let age = today.getFullYear() - birth.getFullYear();
+            const m = today.getMonth() - birth.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+            return age;
+        }
+
+        function getAgeGroup(age) {
+            if (age === null) return 'غير محدد';
+            if (age < 18) return 'أقل من 18';
+            if (age < 25) return '18-24';
+            if (age < 35) return '25-34';
+            if (age < 45) return '35-44';
+            if (age < 55) return '45-54';
+            if (age < 65) return '55-64';
+            return '65+';
+        }
+
+        function applyFilters() {
+            const search = normalizeArabic(document.getElementById('searchInput').value.trim().toLowerCase());
+            const cityFilter = document.getElementById('cityFilter').value;
+            const dateFrom = document.getElementById('dateFrom').value;
+            const dateTo = document.getElementById('dateTo').value;
+
+            filteredData = allData.filter(item => {
+                // Search
+                if (search) {
+                    const matchName = item.name.toLowerCase().includes(search);
+                    const matchPhone = item.phone.includes(search);
+                    const matchId = item.id.includes(search);
+                    if (!matchName && !matchPhone && !matchId) return false;
+                }
+
+                // City
+                if (cityFilter && item.city !== cityFilter) return false;
+
+                // Date range
+                if (dateFrom && item.age) {
+                    if (item.age < dateFrom) return false;
+                }
+                if (dateTo && item.age) {
+                    if (item.age > dateTo) return false;
+                }
+
+                return true;
+            });
+
+            currentPage = 1;
+            updateStats();
+            renderCharts();
+            renderTable();
+            updateResultsCount();
+        }
+
+        function updateStats() {
+            const totalPeople = filteredData.length;
+            const totalFamilies = filteredData.reduce((sum, d) => sum + d.family_members, 0);
+            const cities = new Set(filteredData.map(d => d.city)).size;
+            const avgAge = (() => {
+                const ages = filteredData.map(d => calculateAge(d.age)).filter(a => a !== null);
+                return ages.length ? Math.round(ages.reduce((a, b) => a + b, 0) / ages.length) : '—';
+            })();
+
+            document.getElementById('statsRow').innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-number">${totalPeople}</div>
+                    <div class="stat-label">إجمالي المسجلين</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${totalFamilies}</div>
+                    <div class="stat-label">إجمالي المستفادين (أفراد الأسر)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${cities}</div>
+                    <div class="stat-label">عدد المدن</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${avgAge}</div>
+                    <div class="stat-label">متوسط العمر</div>
+                </div>
+            `;
+        }
+
+        function updateResultsCount() {
+            const totalPages = Math.ceil(filteredData.length / PAGE_SIZE);
+            const showing = Math.min(PAGE_SIZE, filteredData.length - (currentPage - 1) * PAGE_SIZE);
+            const start = (currentPage - 1) * PAGE_SIZE + 1;
+            const end = filteredData.length === 0 ? 0 : start + showing - 1;
+            document.getElementById('resultsCount').innerHTML = `
+                عرض <span>${start}-${end}</span> من أصل <span>${filteredData.length}</span> نتيجة
+            `;
+        }
+
+        function renderCharts() {
+            renderCityChart();
+            renderFamilyChart();
+            renderAgeChart();
+            renderStatusChart();
+        }
+
+        function renderCityChart() {
+            const cityCounts = {};
+            filteredData.forEach(d => {
+                cityCounts[d.city] = (cityCounts[d.city] || 0) + 1;
+            });
+
+            const sorted = Object.entries(cityCounts).sort((a, b) => b[1] - a[1]).slice(0, 15);
+            const labels = sorted.map(s => s[0]);
+            const values = sorted.map(s => s[1]);
+
+            if (cityChartInstance) cityChartInstance.destroy();
+
+            cityChartInstance = new Chart(document.getElementById('cityChart'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'عدد المسجلين',
+                        data: values,
+                        backgroundColor: CHART_COLORS.slice(0, labels.length),
+                        borderRadius: 8,
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#1e293b',
+                            titleColor: '#f1f5f9',
+                            bodyColor: '#94a3b8',
+                            borderColor: '#334155',
+                            borderWidth: 1,
+                            cornerRadius: 8,
+                            padding: 12
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#94a3b8', font: { family: 'Tajawal' } },
+                            grid: { color: 'rgba(51,65,85,0.5)' }
+                        },
+                        y: {
+                            ticks: { color: '#94a3b8', font: { family: 'Tajawal', size: 11 } },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderFamilyChart() {
+            const famCounts = {};
+            filteredData.forEach(d => {
+                const fm = d.family_members || 0;
+                const key = fm <= 3 ? '1-3' : fm <= 6 ? '4-6' : fm <= 9 ? '7-9' : fm <= 12 ? '10-12' : '13+';
+                famCounts[key] = (famCounts[key] || 0) + 1;
+            });
+
+            const order = ['1-3', '4-6', '7-9', '10-12', '13+'];
+            const labels = order.filter(k => famCounts[k]);
+            const values = labels.map(k => famCounts[k]);
+
+            if (familyChartInstance) familyChartInstance.destroy();
+
+            familyChartInstance = new Chart(document.getElementById('familyChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: CHART_COLORS.slice(0, labels.length),
+                        borderWidth: 0,
+                        hoverOffset: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '65%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#94a3b8', font: { family: 'Tajawal' }, padding: 16, usePointStyle: true }
+                        },
+                        tooltip: {
+                            backgroundColor: '#1e293b',
+                            titleColor: '#f1f5f9',
+                            bodyColor: '#94a3b8',
+                            borderColor: '#334155',
+                            borderWidth: 1,
+                            cornerRadius: 8,
+                            padding: 12
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderAgeChart() {
+            const ageGroupCounts = {};
+            filteredData.forEach(d => {
+                const age = calculateAge(d.age);
+                const group = getAgeGroup(age);
+                ageGroupCounts[group] = (ageGroupCounts[group] || 0) + 1;
+            });
+
+            const order = ['أقل من 18', '18-24', '25-34', '35-44', '45-54', '55-64', '65+', 'غير محدد'];
+            const labels = order.filter(k => ageGroupCounts[k]);
+            const values = labels.map(k => ageGroupCounts[k]);
+
+            if (ageChartInstance) ageChartInstance.destroy();
+
+            ageChartInstance = new Chart(document.getElementById('ageChart'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'عدد الأشخاص',
+                        data: values,
+                        backgroundColor: 'rgba(139,92,246,0.7)',
+                        borderColor: 'rgba(139,92,246,1)',
+                        borderWidth: 1,
+                        borderRadius: 8,
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#1e293b',
+                            titleColor: '#f1f5f9',
+                            bodyColor: '#94a3b8',
+                            borderColor: '#334155',
+                            borderWidth: 1,
+                            cornerRadius: 8,
+                            padding: 12
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#94a3b8', font: { family: 'Tajawal', size: 11 } },
+                            grid: { display: false }
+                        },
+                        y: {
+                            ticks: { color: '#94a3b8', font: { family: 'Tajawal' } },
+                            grid: { color: 'rgba(51,65,85,0.5)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderStatusChart() {
+            const statusCounts = {};
+            filteredData.forEach(d => {
+                const status = d.responisble_family || 'غير محدد';
+                statusCounts[status] = (statusCounts[status] || 0) + 1;
+            });
+
+            const sorted = Object.entries(statusCounts).sort((a, b) => b[1] - a[1]);
+            const labels = sorted.map(s => s[0]);
+            const values = sorted.map(s => s[1]);
+
+            if (statusChartInstance) statusChartInstance.destroy();
+
+            statusChartInstance = new Chart(document.getElementById('statusChart'), {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: CHART_COLORS.slice(0, labels.length),
+                        borderWidth: 2,
+                        borderColor: '#1e293b'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#94a3b8', font: { family: 'Tajawal', size: 11 }, padding: 12, usePointStyle: true }
+                        },
+                        tooltip: {
+                            backgroundColor: '#1e293b',
+                            titleColor: '#f1f5f9',
+                            bodyColor: '#94a3b8',
+                            borderColor: '#334155',
+                            borderWidth: 1,
+                            cornerRadius: 8,
+                            padding: 12
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            const start = (currentPage - 1) * PAGE_SIZE;
+            const pageData = filteredData.slice(start, start + PAGE_SIZE);
+
+            if (pageData.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8">
+                            <div class="no-data">
+                                <div class="no-data-icon">🔍</div>
+                                <p>لا توجد نتائج مطابقة</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                document.getElementById('pagination').innerHTML = '';
+                return;
+            }
+
+            tbody.innerHTML = pageData.map((item, idx) => {
+                const age = calculateAge(item.age);
+                return `
+                    <tr>
+                        <td>${start + idx + 1}</td>
+                        <td><strong>${item.name}</strong></td>
+                        <td><span class="phone-text">${item.phone}</span></td>
+                        <td>${item.id}</td>
+                        <td><span class="badge badge-city">${item.city}</span></td>
+                        <td><span class="badge badge-family">${item.family_members}</span></td>
+                        <td>${item.responisble_family}</td>
+                        <td>${item.age} ${age !== null ? `<span class="age-badge">${age} سنة</span>` : ''}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            renderPagination();
+        }
+
+        function renderPagination() {
+            const totalPages = Math.ceil(filteredData.length / PAGE_SIZE);
+            const pagDiv = document.getElementById('pagination');
+
+            if (totalPages <= 1) {
+                pagDiv.innerHTML = '';
+                return;
+            }
+
+            let html = `<button class="page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="goToPage(${currentPage - 1})">◀</button>`;
+
+            const maxButtons = 7;
+            let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+            let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+            if (endPage - startPage < maxButtons - 1) {
+                startPage = Math.max(1, endPage - maxButtons + 1);
+            }
+
+            if (startPage > 1) {
+                html += `<button class="page-btn" onclick="goToPage(1)">1</button>`;
+                if (startPage > 2) html += `<span style="color:var(--text-secondary);padding:0 4px;">...</span>`;
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+            }
+
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) html += `<span style="color:var(--text-secondary);padding:0 4px;">...</span>`;
+                html += `<button class="page-btn" onclick="goToPage(${totalPages})">${totalPages}</button>`;
+            }
+
+            html += `<button class="page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="goToPage(${currentPage + 1})">▶</button>`;
+
+            pagDiv.innerHTML = html;
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            renderTable();
+            updateResultsCount();
+            document.querySelector('.table-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('cityFilter').value = '';
+            document.getElementById('dateFrom').value = '';
+            document.getElementById('dateTo').value = '';
+            applyFilters();
+        }
+
+        function exportCSV() {
+            if (filteredData.length === 0) return;
+
+            const headers = ['الاسم', 'رقم الهاتف', 'الرقم الشخصي', 'المدينة', 'أفراد الأسرة', 'صفة رب الأسرة', 'تاريخ الميلاد'];
+            const rows = filteredData.map(d => [
+                d.name, d.phone, d.id, d.city, d.family_members, d.responisble_family, d.age
+            ]);
+
+            let csv = '\uFEFF'; // BOM for Excel Arabic support
+            csv += headers.join(',') + '\n';
+            rows.forEach(row => {
+                csv += row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',') + '\n';
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'بيانات_المسجلين.csv';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Search on Enter key
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('searchInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') applyFilters();
+            });
+            fetchData();
+        });
+    </script>
+	<style>
+  /* Hard-coded CSS for the footer */
+  .custom-footer {
+    background-color: #1a1a2e;
+    color: #f0f0f0;
+    text-align: center;
+    padding: 25px 20px;
+    margin-top: 40px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border-top: 3px solid #e94560;
+  }
+
+  .custom-footer p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .custom-footer .copyright-text {
+    direction: rtl; /* For Arabic text alignment */
+    display: inline-block;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+
+  /* Make it responsive */
+  @media (max-width: 768px) {
+    .custom-footer {
+      padding: 20px 15px;
+      font-size: 14px;
+    }
+  }
+</style>
+
+<footer class="custom-footer">
+  <p>
+    <span class="copyright-text">© 2026 بواسطة مجاب عبيد, جميع الحقوق محفوظة</span>
+  </p>
+</footer>
+</body>
+</html>
+
