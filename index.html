@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مبادرة اضاحي الخير حكومة الوحدة الوطنية
+    <title>مبادرة دولة رئيس مجلس الوزراء (أضاحي الخير)
 </title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
@@ -39,6 +39,23 @@
             min-height: 100vh;
             overflow-x: hidden;
         }
+
+.hero-logo {
+    position: absolute;
+    
+    right: 30px;
+    width: 130px; /* adjust size */
+    height: auto;
+    z-index: 2;
+}
+
+@media (max-width: 768px) {
+    .hero-logo {
+        width: 55px;
+        top: 15px;
+        right: 15px;
+    }
+}
 
         .hero {
             background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 50%, #1a0a2e 100%);
@@ -509,7 +526,10 @@
 <body>
     <div class="hero">
         <div class="hero-content">
-            <h1>مبادرة اضاحي الخير حكومة الوحدة الوطنية
+		<img src="logo.png" alt="logo" class="hero-logo">
+		<h1>حكومة الوحدة الوطنية
+</h1>
+            <h1>مبادرة دولة رئيس مجلس الوزراء (أضاحي الخير)
 </h1>
             <p>لوحة التحكم</p>
         </div>
